@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chemical Elements Clock</title>
+<style>
+    body {
+        margin: 0;
+        background: radial-gradient(circle at center, #0f2027, #000000);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
+
+    .clock {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        border: 6px solid rgba(255,255,255,0.2);
+        box-shadow: 0 0 40px cyan, inset 0 0 30px rgba(0,255,255,0.3);
+        background: radial-gradient(circle, #111 60%, #000 100%);
+    }
+
+    .number {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transform: rotate(var(--rotation));
+        color: cyan;
+        font-weight: bold;
+        font-size: 12px;
+        text-shadow: 0 0 10px cyan;
+    }
+
+    .number span {
+        display: inline-block;
+        transform: rotate(calc(-1 * var(--rotation)));
+        position: absolute;
+        top: 30px;
+        left: 50%;
+        transform-origin: center;
+        translate: -50% 0;
+        width: 150px;
+    }
+
+    .hand {
+        --rotation: 0;
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        transform-origin: bottom;
+        transform: translateX(-50%) rotate(calc(var(--rotation) * 1deg));
+        border-radius: 10px;
+    }
+
+    .hour {
+        width: 6px;
+        height: 120px;
+        background: gold;
+        box-shadow: 0 0 15px gold;
+    }
+
+    .minute {
+        width: 4px;
+        height: 170px;
+        background: white;
+        box-shadow: 0 0 15px white;
+    }
+
+    .second {
+        width: 2px;
+        height: 190px;
+        background: red;
+        box-shadow: 0 0 15px red;
+    }
+
+    .center-dot {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        background: white;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 15px white;
+    }
+</style>
+</head>
+<body>
+
+<div class="clock" id="clock">
+    <div class="hand hour" id="hour-hand"></div>
+    <div class="hand minute" id="minute-hand"></div>
+    <div class="hand second" id="second-hand"></div>
+    <div class="center-dot"></div>
+</div>
+
+<script>
+const labels = [
+    "Polyethylene terephthalate",
+    "Optical Fiber",
+    "Sapphire",
+    "Polycarbonate",
+    "Quartz Crystal",
+    "Air",
+    "Water",
+    "NaCl",
+    "Aluminum Oxynitride",
+    "Optical Fiber",
+    "Borosilicate Glass",
+    "Optical Fiber"
+];
+
+const clock = document.getElementById("clock");
+
+// Create material labels
+labels.forEach((label, i) => {
+    const number = document.createElement("div");
+    number.className = "number";
+    number.style.setProperty("--rotation", `${i * 30}deg`);
+
+    const span = document.createElement("span");
+    span.textContent = label;
+
+    number.appendChild(span);
+    clock.appendChild(number);
+});
+
+function setRotation(element, rotationRatio) {
+    element.style.setProperty('--rotation', rotationRatio * 360);
+}
+
+function updateClock() {
+    const currentDate = new Date();
+    const secondsRatio = currentDate.getSeconds() / 60;
+    const minutesRatio = (secondsRatio + currentDate.getMinutes()) / 60;
+    const hoursRatio = (minutesRatio + currentDate.getHours()) / 12;
+
+    setRotation(document.getElementById("second-hand"), secondsRatio);
+    setRotation(document.getElementById("minute-hand"), minutesRatio);
+    setRotation(document.getElementById("hour-hand"), hoursRatio);
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+
+</body>
+</html>
+
